@@ -9,10 +9,17 @@ export interface Patient {
   name: string;
   dateOfBirth: string;
   ssn: string;
-  gender: 'male' | 'female' | 'other';
+  gender: Gender;
   occupation: string;
   entries?: Entry[];
 }
+export const Gender = {
+  Male: 'male',
+  Female: 'female',
+  Other: 'other',
+} as const;
+
+export type Gender = (typeof Gender)[keyof typeof Gender];
 
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 

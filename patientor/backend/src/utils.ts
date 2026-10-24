@@ -1,4 +1,5 @@
 import type { NewPatient } from './types.ts';
+import { Gender } from './types.ts';
 
 const toNewPatient = (object: any): NewPatient => {
   return {
@@ -31,18 +32,18 @@ const parseSsn = (ssn: any): string => {
   return ssn;
 };
 
-const parseGender = (gender: any): "male" | "female" | "other" => {
-  if (!gender || !isGender(gender)) {
-    throw new Error('Incorrect or missing gender: ' + gender);
-  }
-  return gender;
-};
-
 const parseOccupation = (occupation: any): string => {
   if (!occupation || !isString(occupation)) {
     throw new Error('Incorrect or missing occupation');
   }
   return occupation;
+};
+
+const parseGender = (gender: any): Gender => {
+  if (!gender || !isGender(gender)) {
+    throw new Error('Incorrect or missing gender: ' + gender);
+  }
+  return gender;
 };
 
 const isString = (text: any): text is string => {
@@ -53,8 +54,8 @@ const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
 
-const isGender = (param: any): param is "male" | "female" | "other" => {
-  return ['male', 'female', 'other'].includes(param);
+const isGender = (param: any): param is Gender => {
+  return Object.values(Gender).includes(param as Gender);
 };
 
 export default toNewPatient;
