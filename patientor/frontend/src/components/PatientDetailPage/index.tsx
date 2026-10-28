@@ -8,6 +8,7 @@ import TransgenderIcon from '@mui/icons-material/Transgender';
 import { Patient, Gender, Diagnosis } from '../../types';
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnoses';
+import EntryDetails from './EntryDetails';
 
 const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,12 +45,6 @@ const PatientDetailPage = () => {
     }
   };
 
-  // Helper to find diagnosis name by code
-  const getDiagnosisName = (code: string): string => {
-    const diagnosis = diagnoses.find(d => d.code === code);
-    return diagnosis ? diagnosis.name : '';
-  };
-
   return (
     <Container>
       <Box sx={{ marginTop: 2 }}>
@@ -67,20 +62,7 @@ const PatientDetailPage = () => {
           <Typography variant="body2">No entries</Typography>
         ) : (
           patient.entries.map((entry) => (
-            <Box key={entry.id} sx={{ border: '1px solid #ccc', padding: 2, marginY: 1, borderRadius: 1 }}>
-              <Typography variant="body1">
-                <strong>{entry.date}</strong> {entry.description}
-              </Typography>
-              {entry.diagnosisCodes && (
-                <ul>
-                  {entry.diagnosisCodes.map((code) => (
-                    <li key={code}>
-                      {code} {getDiagnosisName(code)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </Box>
+            <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
           ))
         )}
       </Box>
