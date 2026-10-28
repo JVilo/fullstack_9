@@ -5,24 +5,28 @@ import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
-import { Patient, Gender } from '../../types';
+import { Patient, Gender, Diagnosis } from '../../types';
 import patientService from '../../services/patients';
+import diagnosisService from '../../services/diagnoses';
 
 const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
 
   useEffect(() => {
-    const fetchPatient = async () => {
+    const fetchData = async () => {
       if (!id) return;
       try {
         const fetchedPatient = await patientService.getById(id);
+        const fetchedDiagnoses = await diagnosisService.getAll();
         setPatient(fetchedPatient);
+        setDiagnoses(fetchedDiagnoses);
       } catch (e) {
         console.error(e);
       }
     };
-    void fetchPatient();
+    void fetchData();
   }, [id]);
 
   if (!patient) {
@@ -38,6 +42,12 @@ const PatientDetailPage = () => {
       default:
         return <TransgenderIcon />;
     }
+  };
+
+  // Helper to find diagnosis name by code
+  const getDiagnosisName = (code: string): string => {
+    const diagnosis = diagnoses.find(d => d.code === code);
+    return diagnosis ? diagnosis.name : '';
   };
 
   return (
@@ -64,7 +74,9 @@ const PatientDetailPage = () => {
               {entry.diagnosisCodes && (
                 <ul>
                   {entry.diagnosisCodes.map((code) => (
-                    <li key={code}>{code}</li>
+                    <li key={code}>
+                      {code} {getDiagnosisName(code)}
+                    </li>
                   ))}
                 </ul>
               )}
