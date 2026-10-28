@@ -51,13 +51,24 @@ const PatientDetailPage = () => {
         <Typography variant="body1">date of birth: {patient.dateOfBirth}</Typography>
 
         <Typography variant="h6" sx={{ marginTop: 2 }}>
-          Entries
+          entries
         </Typography>
         {patient.entries.length === 0 ? (
           <Typography variant="body2">No entries</Typography>
         ) : (
-          patient.entries.map((_, index) => (
-            <Box key={index} sx={{ border: '1px solid #ccc', padding: 1, marginY: 1, borderRadius: 1 }} />
+          patient.entries.map((entry) => (
+            <Box key={entry.id} sx={{ border: '1px solid #ccc', padding: 2, marginY: 1, borderRadius: 1 }}>
+              <Typography variant="body1">
+                <strong>{entry.date}</strong> {entry.description}
+              </Typography>
+              {entry.diagnosisCodes && (
+                <ul>
+                  {entry.diagnosisCodes.map((code) => (
+                    <li key={code}>{code}</li>
+                  ))}
+                </ul>
+              )}
+            </Box>
           ))
         )}
       </Box>
